@@ -33,9 +33,15 @@ function getMimeType(string $filePath): string
         return $mimeMap[$ext];
     }
 
-    $detected = mime_content_type($filePath);
+    if (function_exists('mime_content_type')) {
+        $detected = mime_content_type($filePath);
 
-    return $detected ?: 'application/octet-stream';
+        if ($detected !== false && $detected !== '') {
+            return $detected;
+        }
+    }
+
+    return 'application/octet-stream';
 }
 
 /**
@@ -43,7 +49,6 @@ function getMimeType(string $filePath): string
  */
 function normalizeRoute(string $uri): string
 {
-    // Remove query string
     $path = parse_url($uri, PHP_URL_PATH) ?? '';
     $path = trim($path, '/');
 
