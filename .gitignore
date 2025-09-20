@@ -1,0 +1,14 @@
+vendor
+*.log
+*no*commit*
+*No*Commit*
+*NO*COMMIT*
+*.bkp.*
+*.bkp
+.env
+
+# PHP
+/vendor
+
+# Vercel
+.vercel

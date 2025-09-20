@@ -1,0 +1,2 @@
+no terminal (ou CMD), no caminho onde a pasta do projeto está, executar:
+php -S 0.0.0.0:8000 -t .

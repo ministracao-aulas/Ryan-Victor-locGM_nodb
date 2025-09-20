@@ -1,0 +1,24 @@
+{
+    "require": {
+        "spatie/simple-excel": "^3.4",
+        "symfony/var-dumper": "^7.0",
+        "tracy/tracy": "^2.10"
+    },
+    "scripts": {
+        "serve": "php -S 0.0.0.0:8000 -t api",
+        "serve:8000": "php -S 0.0.0.0:8000 -t api",
+        "serve:8001": "php -S 0.0.0.0:8001 -t api",
+        "serve:8002": "php -S 0.0.0.0:8002 -t api"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "./App"
+        },
+        "files": [
+            "functions/helpers.php"
+        ]
+    },
+    "require-dev": {
+        "laravel/pint": "^1.14"
+    }
+}
