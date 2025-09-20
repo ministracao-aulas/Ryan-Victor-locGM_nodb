@@ -33,7 +33,7 @@ function getMimeType(string $filePath): string
         return $mimeMap[$ext];
     }
 
-    $detected = @mime_content_type($filePath);
+    $detected = mime_content_type($filePath);
 
     return $detected ?: 'application/octet-stream';
 }
