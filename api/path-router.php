@@ -68,9 +68,16 @@ $fallbackController = function (string $_uri, bool $onlyRoutes = false) {
 $route = normalizeRoute($uri);
 
 $filePath = match ($route) {
-    '', 'home', 'index' => CONTENT_PATH . '/index.php',
-    'about' => CONTENT_PATH . '/about.php',
-    'contact' => CONTENT_PATH . '/contact.php',
+    '', '/', 'index', 'index.php' => CONTENT_PATH . '/index.php',
+    'chat', 'chat.php' => CONTENT_PATH . '/chat.php',
+    'data', 'data.php' => CONTENT_PATH . '/data.php',
+    'emergencias', 'emergencias.php' => CONTENT_PATH . '/emergencias.php',
+    'empresa', 'empresa.php' => CONTENT_PATH . '/empresa.php',
+    'feed', 'feed.php' => CONTENT_PATH . '/feed.php',
+    'home', 'home.php' => CONTENT_PATH . '/home.php',
+    'logout', 'logout.php' => CONTENT_PATH . '/logout.php',
+    'map', 'map.php' => CONTENT_PATH . '/map.php',
+    'profile', 'profile.php' => CONTENT_PATH . '/profile.php',
     default => $fallbackController($route),
 };
 
