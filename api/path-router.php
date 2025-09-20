@@ -7,23 +7,24 @@ define('CONTENT_PATH', realpath(__DIR__ . '/../www-content'));
 /**
  * Resolve MIME type by extension first, then fallback to mime_content_type()
  */
-function getMimeType(string $filePath): string {
+function getMimeType(string $filePath): string
+{
     static $mimeMap = [
-        'css'  => 'text/css',
-        'js'   => 'application/javascript',
+        'css' => 'text/css',
+        'js' => 'application/javascript',
         'json' => 'application/json',
-        'xml'  => 'application/xml',
-        'svg'  => 'image/svg+xml',
-        'jpg'  => 'image/jpeg',
+        'xml' => 'application/xml',
+        'svg' => 'image/svg+xml',
+        'jpg' => 'image/jpeg',
         'jpeg' => 'image/jpeg',
-        'png'  => 'image/png',
-        'gif'  => 'image/gif',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
         'webp' => 'image/webp',
-        'ico'  => 'image/x-icon',
-        'pdf'  => 'application/pdf',
+        'ico' => 'image/x-icon',
+        'pdf' => 'application/pdf',
         'html' => 'text/html',
-        'htm'  => 'text/html',
-        'txt'  => 'text/plain',
+        'htm' => 'text/html',
+        'txt' => 'text/plain',
     ];
 
     $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
@@ -33,11 +34,28 @@ function getMimeType(string $filePath): string {
     }
 
     $detected = @mime_content_type($filePath);
+
     return $detected ?: 'application/octet-stream';
 }
 
+/**
+ * Remove query string e normaliza extensão .php
+ */
+function normalizeRoute(string $uri): string
+{
+    // Remove query string
+    $path = parse_url($uri, PHP_URL_PATH) ?? '';
+    $path = trim($path, '/');
+
+    // Se terminar com .php, remove a extensão
+    if (str_ends_with($path, '.php')) {
+        $path = substr($path, 0, -4);
+    }
+
+    return $path;
+}
+
 $fallbackController = function (string $_uri, bool $onlyRoutes = false) {
-    // If $onlyRoutes is 'true', other uris will return 404
     if ($onlyRoutes) {
         return __DIR__ . '/404.php';
     }
@@ -47,16 +65,19 @@ $fallbackController = function (string $_uri, bool $onlyRoutes = false) {
     return is_file($filePath) ? $filePath : __DIR__ . '/404.php';
 };
 
-$filePath = match (trim(ltrim($uri, '/'))) {
-    '', '/', 'home', 'index', 'index.php' => CONTENT_PATH . '/index.php',
-    'about', 'about.php' => CONTENT_PATH . '/about.php',
-    'contact', 'contact.php' => CONTENT_PATH . '/contact.php',
-    default => $fallbackController($uri),
+$route = normalizeRoute($uri);
+
+$filePath = match ($route) {
+    '', 'home', 'index' => CONTENT_PATH . '/index.php',
+    'about' => CONTENT_PATH . '/about.php',
+    'contact' => CONTENT_PATH . '/contact.php',
+    default => $fallbackController($route),
 };
 
 // Se for um .php conhecido, "require":
 if (str_ends_with($filePath, '.php') && strpos($filePath, CONTENT_PATH) === 0) {
     require $filePath;
+
     exit;
 }
 
@@ -67,9 +88,11 @@ if (is_file($filePath)) {
     header('Content-Length: ' . filesize($filePath));
 
     readfile($filePath);
+
     exit;
 }
 
 // Fallback final (se nada encontrado)
 http_response_code(404);
+
 require __DIR__ . '/404.php';
