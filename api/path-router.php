@@ -12,7 +12,7 @@ $fallbackController = function(string $_uri, bool $onlyRoutes = false) {
         return __DIR__ . '/404.php';
     }
 
-    $filePath = CONTENT_PATH . "/{$_uri}.php";
+    $filePath = CONTENT_PATH . "/{$_uri}";
 
     return is_file($filePath) ? $filePath : __DIR__ . '/404.php';
 };
